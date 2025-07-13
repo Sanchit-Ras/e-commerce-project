@@ -5,6 +5,9 @@ import Loading from './Loading.jsx'
 export default function CartPage(){ 
   const [cartData,updateCartData]=useState([]);
   const [loading,setLoading]=useState(true);
+  if(!localStorage.getItem("my-cart")){
+    return <div className='text-4xl font-black md:text-9xl w-full text-center'>Cart is empty</div>
+  }
   useEffect(()=>{
       const Cart=JSON.parse(localStorage.getItem("my-cart"));
       const promises=Object.keys(Cart).map(productId=>getProduct(productId).then(response=>(

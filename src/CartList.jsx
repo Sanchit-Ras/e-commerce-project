@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CartRow from './CartRow.jsx';
 
 export default function CartList({ products, handleRemoveCart,localCart,setLocalCart,updateCart }) {
-  
+  // const totalAmout=products.reduce()
   function handleUpdateCart(){
     updateCart(localCart);
   }

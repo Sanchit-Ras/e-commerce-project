@@ -37,11 +37,11 @@ export default function ProductDetail({onCartChange}){
   return (
    
     <div className='flex w-full justify-center items-center '>
-      {id>1 &&<Link className='text-9xl text-gray-300 hover:text-gray-400' to={'/product/'+(id-1)}>
+      {id>1 &&<Link className='sm:text-9xl text-2xl sm:text-gray-300 hover:text-gray-400' to={'/product/'+(id-1)}>
         <IoIosArrowBack/>
       </Link>}    
       <div className="flex flex-col md:flex-row py-4 px-8 my-4 bg-white gap-10 max-w-7xl relative">
-        <Link className="p-2 text-2xl self-start absolute -top-8 left-0 bg-white" to="/"><LuCircleArrowLeft /></Link>
+        <Link className="p-2 text-2xl self-start absolute sm:-top-8 sm:left-0 top-0 left-0 bg-white" to="/"><LuCircleArrowLeft /></Link>
         <img className='md:w-[50%]'
           src={product.thumbnail}/>
         <div className='flex flex-col gap-4'>
@@ -55,7 +55,7 @@ export default function ProductDetail({onCartChange}){
 
         </div>
       </div>
-      <Link className='text-9xl text-gray-300 hover:text-gray-400' to={'/product/'+(id+1)}>
+      <Link className='sm:text-9xl text-2xl sm:text-gray-300 hover:text-gray-400' to={'/product/'+(id+1)}>
         <IoIosArrowForward />
       </Link> 
    </div>

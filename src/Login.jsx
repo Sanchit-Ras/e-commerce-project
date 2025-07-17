@@ -42,6 +42,6 @@ export function Login({ values, handleSubmit, handleChange, errors, touched, han
         </div>
     )
 }
-const customHOC=withFormik({validationSchema:schema,initialValues:initialValues, onSubmit:callLoginApi});
+const customHOC=withFormik({validationSchema:schema,initialValues:initialValues, handleSubmit:callLoginApi});
 
 export default customHOC(Login);

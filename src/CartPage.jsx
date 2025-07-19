@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import CartList from './CartList.jsx';
 import { getProduct } from './database.js';
 import Loading from './Loading.jsx'
-export default function CartPage({ Cart, updateCart }) {
+import { Navigate } from 'react-router-dom';
+export default function CartPage({ Cart, updateCart,user }) {
   const [cartData, updateCartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [localCart,setLocalCart]=useState(Cart);
@@ -29,7 +30,6 @@ export default function CartPage({ Cart, updateCart }) {
     delete newCart[productId];
     updateCart(newCart);
   }
-
   if (Object.keys(Cart).length == 0) {
     return <div className='text-4xl font-black md:text-9xl w-full text-center'>Cart is empty</div>
   }

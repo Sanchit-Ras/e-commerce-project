@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import { GrCart } from "react-icons/gr";
 import { withFormik } from 'formik';
-import React from 'react';
+import axios from 'axios';
 import * as yup from 'yup';
 const schema = yup.object().shape({
     email: yup.string().email().required(),
@@ -11,8 +11,18 @@ const initialValues = {
     email: '',
     password: ''
 }
-function callLoginApi({ email, password }) {
-    console.log("Data sent", email, password);
+function callLoginApi(values,bag) {
+    axios.post('https://myeasykart.codeyogi.io/login',{
+        email:values.email,
+        password:values.password
+    }).then((response)=>{
+        console.log("login successfull")
+        const {user,token}=response.data;
+        localStorage.setItem("token",token);
+        bag.props.setUser(user);
+    }).catch((error)=>{
+        console.log("login failed: ",error);
+    })
 }
 export function Login({ values, handleSubmit, handleChange, errors, touched, handleBlur }) {
 
@@ -23,14 +33,14 @@ export function Login({ values, handleSubmit, handleChange, errors, touched, han
                 className='p-10 border border-white rounded-xl flex flex-col'>
                 <div>
                     <label htmlFor="email" className="sr-only">email</label>
-                    <input id='email' placeholder="Email" type="email" name="email" value={values.email} onChange={handleChange} onBlur={handleBlur}
+                    <input id='email' placeholder="Email" type="email" name="email" value={values.email??""} onChange={handleChange} onBlur={handleBlur}
                         className='min-w-52 px-6 py-3 rounded-xl border-4 border-white placeholder-gray-50 text-white focus:outline-none' />
                     {touched.email && errors.email && <p className='text-primary-light text-xs'>{errors.email}</p>}
                 </div>
                 
                 <div>
                     <label htmlFor="password" className="sr-only">password</label>
-                    <input id='password' type="password" placeholder="Password" name="password" value={values.password} onChange={handleChange} onBlur={handleBlur}
+                    <input id='password' type="password" placeholder="Password" name="password" value={values.password??""} onChange={handleChange} onBlur={handleBlur}
                         className='min-w-52 px-6 py-3 rounded-xl border-4 border-white placeholder-gray-50 mt-5 text-white focus:outline-none' />
                     {touched.password && errors.password && <p className='text-primary-light text-xs'>{errors.password}</p>}
                 </div>

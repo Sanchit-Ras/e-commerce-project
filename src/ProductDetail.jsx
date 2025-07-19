@@ -1,10 +1,11 @@
 import {useState,useEffect} from 'react';
-import {useParams,Link} from 'react-router-dom';
+import {useParams,Link, Navigate} from 'react-router-dom';
 import { LuCircleArrowLeft } from "react-icons/lu";
 import {getProduct} from './database.js';
 import Loading from './Loading.jsx';
 import { IoIosArrowBack,IoIosArrowForward } from "react-icons/io";
 import NotFound from './NotFound.jsx';
+import React from 'react';
 export default function ProductDetail({onCartChange}){
   const id=+useParams().id;
   const [quantity,setQuantity]=useState(1);
@@ -28,6 +29,7 @@ export default function ProductDetail({onCartChange}){
       
     });
   },[id]);
+  
   if(loading){
     return (
       <Loading/>

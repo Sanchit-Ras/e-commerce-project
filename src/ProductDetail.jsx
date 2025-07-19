@@ -43,7 +43,7 @@ export default function ProductDetail({onCartChange}){
       <div className="flex flex-col md:flex-row py-4 px-8 my-4 bg-white gap-10 max-w-7xl relative">
         <Link className="p-2 text-2xl self-start absolute sm:-top-8 sm:left-0 top-0 left-0 bg-white" to="/"><LuCircleArrowLeft /></Link>
         <img className='md:w-[50%]'
-          src={product.thumbnail}/>
+          src={product.thumbnail} alt="product"/>
         <div className='flex flex-col gap-4'>
           <h1 className="text-gray-500  text-2xl md:text-4xl xl:text-6xl">{product.title}</h1>
           <h2 className="text-gray-600 text-xl md:text-4xl xl:text-5xl font-medium">${product.price}</h2>

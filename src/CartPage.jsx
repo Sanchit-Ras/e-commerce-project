@@ -12,8 +12,9 @@ export default function CartPage({ Cart, updateCart }) {
   },[Cart])
 
   useEffect(() => {
+    setLoading(true);
     const promises = Object.keys(Cart).map(productId => getProduct(productId).then(response => (
-      { ...response.data, quantity: Cart[productId] }
+      { ...response.data, quantityInCart: Cart[productId] }
     ))
     );
     Promise.all(promises).then(response => {

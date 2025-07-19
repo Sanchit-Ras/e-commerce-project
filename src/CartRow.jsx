@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CartData from './CartData.js';
 
-export default function CartRow({ thumbnail, title, price, quantity, id, updateGlobalCart,localCart,setLocalCart }) {
+export default function CartRow({ thumbnail, title, price, quantityInCart, id, updateGlobalCart,localCart,setLocalCart }) {
   function removeItem() {
     updateGlobalCart(id);
   }
@@ -41,7 +41,7 @@ export default function CartRow({ thumbnail, title, price, quantity, id, updateG
 
 
       <div className="text-gray-600 px-10 py-5 font-semibold hidden sm:block">
-        ${(price * (+quantity)).toFixed(2)}
+        ${(price * (+quantityInCart)).toFixed(2)}
       </div>
       {/* small screens */}
 
@@ -67,11 +67,11 @@ export default function CartRow({ thumbnail, title, price, quantity, id, updateG
               </div>
               <div>
                 <span className="text-gray-500">Qty: </span>
-                <span className="text-gray-600 font-semibold">{+quantity}</span>
+                <span className="text-gray-600 font-semibold">{+quantityInCart}</span>
               </div>
               <div className="col-span-2">
                 <span className="text-gray-500">Total: </span>
-                <span className="text-gray-600 font-semibold">${(price * (+quantity)).toFixed(2)}</span>
+                <span className="text-gray-600 font-semibold">${(price * (+quantityInCart)).toFixed(2)}</span>
               </div>
             </div>
           </div>

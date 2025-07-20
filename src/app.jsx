@@ -57,9 +57,8 @@ export default function App() {
   }
 
   const totalQuantity = useMemo(() => {
-    const tQ = Object.keys(cart).reduce((prev, curr) => {
-      console.log("total quantity");
-      return prev + cart[curr];
+    const tQ = Object.values(cart).reduce((prev, curr) => {
+      return prev + curr;
     }, 0)
     return tQ;
   }

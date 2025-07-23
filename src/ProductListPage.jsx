@@ -49,11 +49,7 @@ export default function ProductListPage() {
     return <Loading />
   }
 
-  if (productData.data.length === 0) {
-    return (
-      <NoResults />
-    );
-  }
+
 
 
 
@@ -66,9 +62,9 @@ export default function ProductListPage() {
           onSortChange={handelSort}
         />
       </div>
-      <ProductList products={productData.data}  />
-
-      <Pages {...productData.meta} params={params}/>
+        {productData.data.length!==0&&<ProductList products={productData.data}  />}
+        {productData.data.length === 0 && <NoResults/>}
+        {productData.data.length!==0&&<Pages {...productData.meta} params={params}/>}
     </div>
   )
 

@@ -14,6 +14,7 @@ function Header({ totalQuantity, setUser }) {
           src="https://cdn.glitch.global/8a033d66-d3d7-4299-beca-375fd3de0c14/thumbnails%2FCheaply%20(2).png?1750361026209" /></Link>
         <div className="flex items-center">
           <button className="border border-primary-light text-primary-light px-5 py-2.5 rounded-md font-semibold hover:bg-primary-light hover:text-white" onClick={handleLogout}>Logout</button>
+          <Link to="/login" className="border border-primary-light text-primary-light px-5 py-2.5 rounded-md font-semibold hover:bg-primary-light hover:text-white ml-4">Login</Link>
           <Link to="/cart"><GiShoppingBag className="text-5xl text-primary-light ml-4" /></Link>
           <div className="bg-primary-dark size-6 p-1 rounded-full absolute top-0 right-0 text-xs text-white font-bold flex justify-center items-center">{totalQuantity}</div>
         </div>

@@ -26,21 +26,25 @@ function CartProvider({ isLoggedIn, children }) {
         updateCart(newQuantityMap);
     }, [cart]);
     function updateCart(newQuantityMap) {
+        console.log(newQuantityMap);
         if (isLoggedIn) {
             saveCart(newQuantityMap).then((response) => {
                 const map = response.data.reduce((prevMap, currItem) => (
                     { ...prevMap, [currItem.product_id]: currItem.quantity }
                 ), {});
-                getProducts(Object.keys(map)).then((response) => {
-                    const savedCart = response.data.map((product) => ({ product: product, quantity: map[product.id] }))
-                    setCart(savedCart);
-                })
+                quantityMapToCart(map);
             });
         } else {
-            const myCart = JSON.stringify(newQuantityMap)
-            localStorage.setItem("my-cart", myCart);
+            localStorage.setItem("my-cart", JSON.stringify(newQuantityMap));
+            quantityMapToCart(newQuantityMap)
         }
 
+    }
+    function quantityMapToCart(quantityMap) {
+        getProducts(Object.keys(quantityMap)).then((response) => {
+            const savedCart = response.data.map((product) => ({ product: product, quantity: quantityMap[product.id] }))
+            setCart(savedCart);
+        })
     }
 
     const totalQuantity = useMemo(() => {

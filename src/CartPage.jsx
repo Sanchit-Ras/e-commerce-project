@@ -1,44 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import CartList from './CartList.jsx';
-import { getProduct } from './database.js';
+import { getProduct, getProducts } from './api.js';
 import Loading from './Loading.jsx'
-export default function CartPage({ Cart, updateCart }) {
-  const [cartData, updateCartData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [localCart, setLocalCart] = useState(Cart);
+import { withCart } from './withProvider.jsx';
+function CartPage({ cart, updateCart }) {
+  const [quantityMap, setQuantityMap] = useState({});
 
   useEffect(() => {
-    setLocalCart(Cart);
-  }, [Cart])
+    const map=cart.reduce((prevMap,cartItem)=>({...prevMap,[cartItem.product.id]:cartItem.quantity}),
+    {});
+    setQuantityMap(map);
+  }, [cart])
 
-  useEffect(() => {
-    setLoading(true);
-    const promises = Object.keys(Cart).map(productId => getProduct(productId).then(response => (
-      { ...response.data, quantityInCart: Cart[productId] }
-    ))
-    );
-    Promise.all(promises).then(response => {
-      console.log("data in response: ", response);
-      updateCartData(response);
-      setLoading(false);
-    });
-  }, [Cart]);
 
   function handleRemoveCart(productId) {
-    const newCart = { ...Cart };
-    delete newCart[productId];
-    updateCart(newCart);
+    const newQuantityMap = { ...quantityMap};
+    delete newQuantityMap[productId];
+    updateCart(newQuantityMap);
   }
-  if (Object.keys(Cart).length == 0) {
+  if (cart.length == 0) {
     return <div className='text-4xl font-black md:text-9xl w-full text-center'>Cart is empty</div>
   }
-  if (loading) {
-    return <Loading />
-  }
-  const cartTotals = (cartData.map((prod) => prod.price * prod.quantityInCart).reduce((prev, curr) => prev + curr, 0)).toFixed(2);
+  console.log("cart is:",cart)
+  const cartTotals = (cart.map((prod) => prod.product.price * prod.quantity).reduce((prev, curr) => prev + curr, 0)).toFixed(2);
   return (
     <div className="bg-white w-full flex flex-col items-end p-5">
-      <CartList products={cartData} handleRemoveCart={handleRemoveCart} localCart={localCart} setLocalCart={setLocalCart} updateCart={updateCart} />
+      <CartList products={cart} handleRemoveCart={handleRemoveCart} quantityMap={quantityMap} setQuantityMap={setQuantityMap} updateCart={updateCart} />
       <div className="w-md text-gray-600 border border-gray-300 mt-4 hidden sm:block rounded-b-lg">
         <div className="border-b border-gray-300 bg-gray-50 grid grid-cols-2">
           <div className="py-3 font-semibold">Cart Totals</div>
@@ -83,3 +70,4 @@ export default function CartPage({ Cart, updateCart }) {
     </div>
   )
 }
+export default withCart(CartPage);

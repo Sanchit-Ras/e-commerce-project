@@ -1,65 +1,55 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import ProductList from './ProductList.jsx'
-import { getProductData } from "./database.js";
+import { getProductData } from "./api.js";
 import NoResults from './NotResults.jsx';
 import Loading from './Loading.jsx';
 import Sorting from "./Sorting.jsx";
 import Pages from "./Pages.jsx";
+import { useSearchParams } from 'react-router-dom';
+import { replace } from 'lodash';
 export default function ProductListPage() {
-  
-  const [sort, setSort] = useState("default");
-  const [query, setQuery] = useState('');
-  const [productList, updateProductList] = useState([]);
+  const [productData, updateProductData] = useState({});
+  const [searchParams,setSearchParams]=useSearchParams();
+  const [loading,setLoading]=useState(true);
+  const params=Object.fromEntries([...searchParams]);
+  let {page,query,sort}=params;
+  page=page||1;
+  query=query||""
+  sort=sort||"default"
+
+
   useEffect(() => {
-    const promise = getProductData();
+    let sortBy;
+    let sortType;
+    if(sort==="title"){
+      sortBy=sort;
+    }else if(sort==="lowTohigh"){
+      sortBy="price"
+    }else if(sort==="highTolow"){
+      sortBy="price"
+      sortType="desc"
+    }
+    const promise = getProductData({sortBy,sortType,query,page});
     promise.then((response) => {
-      updateProductList(response.data.products)
+      updateProductData(response.data)
+      setLoading(false);
     });
-  }, []);
+  }, [sort,query,page]);
 
-  const handelSearch = useCallback((event) => {
-    setQuery(event.target.value);
-  }, []);
-  const handelSort = useCallback((event) => {
-    setSort(event.target.value);
-  }, []);
-  const processedData = useMemo(() => {
-
-    let filterData = productList.filter(item =>
-      item.title.toLowerCase().includes(query.toLowerCase())
-    );
-    let data = [...filterData];
-
-    if (sort === "lowTohigh") {
-      data.sort((a, b) => {
-        const price1 = +a.price;
-        const price2 = +b.price;
-        return price1 - price2;
-      })
-    }
-    if (sort === "highTolow") {
-      data.sort((a, b) => {
-        const price1 = +a.price;
-        const price2 = +b.price;
-        return price2 - price1;
-      })
-    }
-    if (sort === "category") {
-      data.sort((a, b) => {
-        const cat1 = a.category;
-        const cat2 = b.category;
-        return cat1 < cat2 ? -1 : 1;
-      })
-    }
-    return data;
-  }, [sort, query, productList]);//useMemo returns the value computed on initial render, returns a new value only if the dependency changes ->useful for optimising
+  const handelSearch = useCallback((event) => {//useCallback - returns the function from previous render if the dependency hasnt changed-used when we pass
+    setSearchParams({...params,query:event.target.value,page:1},{replace:false});//a function to memoized component(React memo)
+  }, [params]);
+  const handelSort = useCallback((event) => {//React saves this specific function instance and gives it back to you on every subsequent render.
+    setSearchParams({...params,sort:event.target.value},{replace:false});
+  }, [params]);
+ //useMemo returns the value computed on initial render, returns a new value only if the dependency changes ->useful for optimising
   //big calculations  
 
-  if (productList.length === 0) {
+  if  (loading) {
     return <Loading />
   }
 
-  if (processedData.length === 0) {
+  if (productData.data.length === 0) {
     return (
       <NoResults />
     );
@@ -76,8 +66,9 @@ export default function ProductListPage() {
           onSortChange={handelSort}
         />
       </div>
-      <ProductList products={processedData} />
-      <Pages />
+      <ProductList products={productData.data}  />
+
+      <Pages {...productData.meta} params={params}/>
     </div>
   )
 

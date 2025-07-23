@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import CartRow from './CartRow.jsx';
 
-export default function CartList({ products, handleRemoveCart,localCart,setLocalCart,updateCart }) {
+export default function CartList({ products, handleRemoveCart,quantityMap,setQuantityMap,updateCart }) {
   // const totalAmout=products.reduce()
   function handleUpdateCart(){
-    updateCart(localCart);
+    updateCart(quantityMap);//because i have kept updateCart button in cartList so handleUpdateCart function is in CartList component
   }
   return (
     
@@ -19,7 +19,7 @@ export default function CartList({ products, handleRemoveCart,localCart,setLocal
 
         <div>
           {products.map(items => (
-            <CartRow key={items.id} {...items} updateGlobalCart={handleRemoveCart} localCart={localCart} setLocalCart={setLocalCart} />
+            <CartRow key={items.product.id} {...items} updateGlobalCart={handleRemoveCart} quantityMap={quantityMap} setQuantityMap={setQuantityMap} />
           ))}
         </div>
 

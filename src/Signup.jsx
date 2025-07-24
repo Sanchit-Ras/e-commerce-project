@@ -4,6 +4,7 @@ import { useFormik, withFormik } from 'formik';
 import React from 'react';
 import * as yup from 'yup';
 import axios from 'axios';
+import {withUser,withAlert} from "./withProvider"
 function callSignupApi(values,bag) {
     const fullName=`${values.firstname} ${values.lastname}`;
     axios.post('https://myeasykart.codeyogi.io/signup',{
@@ -11,11 +12,12 @@ function callSignupApi(values,bag) {
         email:values.email,
         password:values.password
     }).then((response)=>{
+        bag.props.setAlert({type:"success",message:'Profile saved successfully'});
         const {user,token}=response.data;
         localStorage.setItem("token",token);
         bag.props.setUser(user);
     }).catch((error)=>{
-        console.log("Signup failed: ",error);
+        bag.props.setAlert({type:"error",message:`${error}`});
     })
 }
 
@@ -33,7 +35,7 @@ const schema = yup.object().shape({
             lastname: ''
         }
 
-function Signup({ values, handleSubmit, handleReset, handleChange, errors, touched, handleBlur }) {// handleBlur sets the touched(interacted with then left)
+function Signup({ values, handleSubmit, handleChange, errors, touched, handleBlur }) {// handleBlur sets the touched(interacted with then left)
 
     return (
         <div className="bg-[url(https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/40f57d0a-9e8f-4f16-bb72-6cc6a39d37da.png)] min-h-screen w-full flex flex-col items-center justify-start">
@@ -73,5 +75,8 @@ function Signup({ values, handleSubmit, handleReset, handleChange, errors, touch
         </div>
     )
 }
-const customHOC=withFormik({initialValues:initialValues,handleSubmit:callSignupApi,validationSchema:schema});
-export default customHOC(Signup);
+export default withAlert(withUser(withFormik({ 
+    validationSchema: schema, 
+    initialValues: initialValues, 
+    handleSubmit: callSignupApi 
+})(Signup)));
